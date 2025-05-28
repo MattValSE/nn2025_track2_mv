@@ -21,21 +21,21 @@ class GRUNetwork(nn.Module):
         # x: (batch, seq_len=1, features=322)
         # h01, h02: (1, batch, 322)
         
-        out1, _ = self.gru1(x, h01)   # out1: (batch, 1, 322)
+        out1, hn1 = self.gru1(x, h01)   # out1: (batch, 1, 322)
         out1 = out1.squeeze(1)        # (batch, 322)
         
         h02 = h02.squeeze(0)          # (batch, 322)
         out2_input = out1 + h02       # residual connection
         
         out2_input = out2_input.unsqueeze(1)  # (batch, 1, 322)
-        out2, _ = self.gru2(out2_input)       # (batch, 1, 322)
+        out2, hn2 = self.gru2(out2_input)      # (batch, 1, 322)
         out2 = out2.squeeze(1)                # (batch, 322)
         
         logits = self.fc(out2)                # (batch, 161)
         out = torch.sigmoid(logits)           # (batch, 161)
-        out = torch.clamp(out, 0.0, 1.0)      # Clip layer (optional if sigmoid used)
+        out = torch.clamp(out, 0.0)      # Clip layer (optional if sigmoid used)
         
-        return out
+        return out,hn1,hn2
 
 
 model = GRUNetwork()

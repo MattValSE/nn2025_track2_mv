@@ -30,7 +30,7 @@ onlinesynth_mic_distortions:
         likelihood: 0.2
         low_freq: [10, 100]
         high_freq: [2000, 4000]
-        order: 7
+        order: 4
 
       # Speaker change augmentations
       speaker_gain_delta_db:

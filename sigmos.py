@@ -90,10 +90,17 @@ if __name__ == '__main__':
         V1 (current model) is an alpha version and should be used in accordance.
     '''
     model_dir = r"./SIGMOS"
+    print(model_dir)
     sigmos_estimator = SigMOS(model_dir=model_dir)
+    
 
-    # input data must have sr=48kHz, otherwise please specify the sr (it will be resampled to 48kHz internally)
     sampling_rate = 16_000
-    dummy_data = np.random.rand(5 * sampling_rate)
-    dummy_result = sigmos_estimator.run(dummy_data, sr=sampling_rate)
-    print(dummy_result)
+    folder = "enhance"
+
+    for filename in os.listdir(folder):
+        if filename.lower().endswith(".wav"):
+            filepath = os.path.join(folder, filename)
+            print(f"Processing file: {filepath}")
+            audio, sr = librosa.load(filepath, sr=sampling_rate)
+            dummy_result = sigmos_estimator.run(audio, sr=sr)
+            print(dummy_result)

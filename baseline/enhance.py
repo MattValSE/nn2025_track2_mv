@@ -6,7 +6,9 @@ import librosa
 import numpy as np
 import onnxruntime
 import soundfile as sf
-from tqdm import tqdm
+from tqdm import tqdm 
+#import matplotlib.pyplot as plt
+
 
 
 class DECModel:
@@ -110,17 +112,34 @@ if __name__ == "__main__":
         hidden_size=322,
         sampling_rate=model_sampling_rate)
 
-    mic_paths = glob.glob(os.path.join(args.data_dir, "*_mic.wav"))
+    mic_paths = [os.path.join(args.data_dir, "mic.wav")]
+    #mic_paths = glob.glob(os.path.join(args.data_dir, "*_mic.wav"))
     for mic_path in tqdm(mic_paths):
         basename = os.path.basename(mic_path)
-        farend_path = mic_path.replace("_mic.wav", "_lpb.wav")
+        farend_path = mic_path.replace("mic.wav", "target.wav")
+        print(farend_path)
         if not os.path.exists(farend_path):
             print("Farend file not found, skipping:", farend_path)
             continue
 
+        #Added to test combining mic and farend files
+        x_mic, _ = librosa.load(mic_path, sr=model_sampling_rate)
+        x_far, _ = librosa.load(farend_path, sr=model_sampling_rate)
+        min_len = min(len(x_mic), len(x_far))
+        x_mic = x_mic[:min_len]
+        x_far = x_far[:min_len]
+
+        # Combine and normalize
+        combined = x_mic + x_far
+        combined /= np.max(np.abs(combined) + 1e-8)
+        combined_path = os.path.join(args.output_dir, "combined.wav")
+        sf.write(combined_path, combined, model_sampling_rate)
+        print(f"Combined audio saved to {combined_path}")
+
         out_path = os.path.join(args.output_dir, basename)
         if os.path.exists(out_path):
             print("Enhanced file exists, overwriting:", out_path)
-        x_enhanced = model.enhance(mic_path, farend_path)
+        x_enhanced = model.enhance( farend_path,mic_path)
         x_enhanced = librosa.resample(x_enhanced, model_sampling_rate, args.output_sr)
+        print(f"x_enhanced shape: {x_enhanced.shape}, min: {x_enhanced.min()}, max: {x_enhanced.max()}")
         sf.write(out_path, x_enhanced, args.output_sr)

@@ -118,7 +118,7 @@ def main(args):
         clips.extend(audio_clips_list)
 
     with concurrent.futures.ThreadPoolExecutor() as executor:
-        future_to_url = {executor.submit(compute_score, clip, desired_fs, False): clip for clip in clips}
+        future_to_url = {executor.submit(compute_score, clip, desired_fs): clip for clip in clips}
         for future in tqdm(concurrent.futures.as_completed(future_to_url)):
             clip = future_to_url[future]
             try:
