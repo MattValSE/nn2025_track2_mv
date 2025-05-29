@@ -90,12 +90,11 @@ if __name__ == '__main__':
         V1 (current model) is an alpha version and should be used in accordance.
     '''
     model_dir = r"./SIGMOS"
-    print(model_dir)
     sigmos_estimator = SigMOS(model_dir=model_dir)
     
 
     sampling_rate = 16_000
-    folder = "enhance"
+    folder = "enchance"
 
     for filename in os.listdir(folder):
         if filename.lower().endswith(".wav"):
