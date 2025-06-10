@@ -25,7 +25,7 @@ class GRUNetwork(nn.Module):
         out1 = out1.squeeze(1)        # (batch, 322)
         
         h02 = h02.squeeze(0)          # (batch, 322)
-        out2_input = out1 + h02       # residual connection
+        out2_input = out1 + h02       
         
         out2_input = out2_input.unsqueeze(1)  # (batch, 1, 322)
         out2, hn2 = self.gru2(out2_input)      # (batch, 1, 322)
@@ -33,7 +33,7 @@ class GRUNetwork(nn.Module):
         
         logits = self.fc(out2)                # (batch, 161)
         out = torch.sigmoid(logits)           # (batch, 161)
-        out = torch.clamp(out, 0.0)      # Clip layer (optional if sigmoid used)
+        out = torch.clamp(out, 0.0)      
         
         return out,hn1,hn2
 

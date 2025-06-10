@@ -88,6 +88,13 @@ class DECModel:
             mask = mask[0, 0]
             x_enh = np.fft.irfft(mask * xmag_mic * xphs_mic, self.dft_size) * self.window
             x_back[ix_start:ix_end] += x_enh
+            
+            # Some debugging
+            #print("Mask shape:", mask.shape)
+            #print("Mask values (min/max/mean):", mask.min(), mask.max(), mask.mean())
+            #plt.plot(mask)
+            #plt.title("First frame mask values")
+            #plt.show()
 
         return x_back[pad_left:]
 
@@ -116,7 +123,7 @@ if __name__ == "__main__":
     #mic_paths = glob.glob(os.path.join(args.data_dir, "*_mic.wav"))
     for mic_path in tqdm(mic_paths):
         basename = os.path.basename(mic_path)
-        farend_path = mic_path.replace("mic.wav", "target.wav")
+        farend_path = mic_path.replace("mic.wav", "farend.wav")
         print(farend_path)
         if not os.path.exists(farend_path):
             print("Farend file not found, skipping:", farend_path)

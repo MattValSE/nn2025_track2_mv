@@ -3,6 +3,15 @@
 This script, `check_global_processing.py`, is designed to verify whether an enhancing model introduces latency beyond the allowed limit. It ensures that the enhanced audio files processed by the model comply with the latency constraints set by the organizers.
 
 ---
+## Usage
+
+After installing requirements and dataset (Detailed below):
+1) train.py
+2) checkpoints/convert_to_onnx.py
+4) baseline/enhance_new_model.py
+5) Run validation metrics as described below
+
+---
 
 ## Overview
 
